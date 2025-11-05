@@ -1,0 +1,26 @@
+# ---- Line Fitting using Least Squares ----
+
+import numpy as np
+import matplotlib.pyplot as plt
+
+# Create sample (x, y) data
+# y = 2x + noise
+np.random.seed(0)
+x = np.linspace(0, 10, 20)
+y = 2 * x + np.random.normal(0, 2, size=len(x))
+
+# Least squares fit → find slope (m) and intercept (c)
+A = np.vstack([x, np.ones(len(x))]).T
+m, c = np.linalg.lstsq(A, y, rcond=None)[0]
+
+print("Slope (m):", m)
+print("Intercept (c):", c)
+
+# Plot original data + fitted line
+plt.scatter(x, y, label="Data points")
+plt.plot(x, m*x + c, label="Fitted line", linewidth=2)
+plt.xlabel("X")
+plt.ylabel("Y")
+plt.title("Least Squares Line Fitting")
+plt.legend()
+plt.show()
