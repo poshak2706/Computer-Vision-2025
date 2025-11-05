@@ -1,0 +1,44 @@
+# -------- Point-based representation of an actual image --------
+
+!pip install scikit-image matplotlib
+
+from skimage import data, color
+import numpy as np
+import matplotlib.pyplot as plt
+from mpl_toolkits.mplot3d import Axes3D
+
+# ✅ Load a real image (astronaut) from scikit-image
+image = data.astronaut()
+gray = color.rgb2gray(image)
+
+# Show original grayscale image
+plt.figure(figsize=(4,4))
+plt.title("Original Image")
+plt.imshow(gray, cmap='gray')
+plt.axis("off")
+plt.show()
+
+# ----- Convert to point representation -----
+
+h, w = gray.shape
+
+# Create pixel coordinate grid
+x, y = np.meshgrid(np.arange(w), np.arange(h))
+
+# Flatten all arrays
+x = x.flatten()
+y = y.flatten()
+z = gray.flatten()   # grayscale intensity
+
+# Plot 3D point cloud
+fig = plt.figure(figsize=(8,8))
+ax = fig.add_subplot(111, projection="3d")
+
+ax.scatter(x, y, z, s=1)
+
+ax.set_title("3D Point-Based Representation")
+ax.set_xlabel("X")
+ax.set_ylabel("Y")
+ax.set_zlabel("Intensity (Z)")
+
+plt.show()
