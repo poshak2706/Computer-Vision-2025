@@ -1,0 +1,58 @@
+# ---- Connected Component Analysis in Computer Vision ----
+
+!pip install opencv-python matplotlib
+
+import cv2
+import numpy as np
+import matplotlib.pyplot as plt
+import urllib.request
+
+# ✅ Working image link (Sudoku image from OpenCV)
+url = "https://raw.githubusercontent.com/opencv/opencv/master/samples/data/sudoku.png"
+image_path = "sample.png"
+urllib.request.urlretrieve(url, image_path)
+
+# Read image in grayscale
+img = cv2.imread(image_path, cv2.IMREAD_GRAYSCALE)
+
+if img is None:
+    print("Could not load image.")
+else:
+    print("Image loaded successfully.")
+
+# Threshold → get a binary image
+_, binary = cv2.threshold(img, 150, 255, cv2.THRESH_BINARY_INV)
+
+# Connected Component Analysis
+num_labels, labels, stats, centroids = cv2.connectedComponentsWithStats(binary)
+
+print("Number of connected components (including background):", num_labels)
+
+# Colorize components
+label_hue = np.uint8(179 * labels / np.max(labels))
+blank_ch = 255 * np.ones_like(label_hue)
+colored_img = cv2.merge([label_hue, blank_ch, blank_ch])
+colored_img = cv2.cvtColor(colored_img, cv2.COLOR_HSV2RGB)
+colored_img[label_hue == 0] = 0  # background -> black
+
+# Display results
+plt.figure(figsize=(15,5))
+
+plt.subplot(1,3,1)
+plt.title("Original Image")
+plt.imshow(img, cmap="gray")
+plt.axis("off")
+
+plt.subplot(1,3,2)
+plt.title("Binary Image")
+plt.imshow(binary, cmap="gray")
+plt.axis("off")
+
+plt.subplot(1,3,3)
+plt.title("Connected Components")
+plt.imshow(colored_img)
+plt.axis("off")
+
+plt.show()
+
+
